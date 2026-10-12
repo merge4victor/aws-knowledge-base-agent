@@ -1,6 +1,6 @@
 # AWS Knowledge Base Agent
 
-A small question answering agent for company documents, built on AWS.
+This is my first public AI repo, A small question answering agent for company documents, built on AWS.
 
 You put documents in an S3 bucket. People ask questions over an HTTPS API.
 The agent searches the documents, answers using only what it found, and lists

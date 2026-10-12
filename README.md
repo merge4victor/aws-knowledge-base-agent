@@ -27,7 +27,7 @@ Sources: leave_policy.md
 flowchart LR
     User -->|POST /ask| Api[API Gateway]
     Api --> Fn[Lambda: Strands agent]
-    Fn -->|ask model| Model[Claude on Bedrock]
+    Fn -->|ask model| Model[Model on Bedrock]
     Fn -->|search_documents tool| Kb[Bedrock Knowledge Base]
     Kb --> Vectors[S3 Vectors index]
     Docs[S3 docs bucket] -->|ingestion job| Kb
@@ -92,8 +92,8 @@ You also need:
 
 - An AWS account with credentials set up for the AWS CLI.
 - The AWS CDK CLI: `npm install -g aws-cdk`.
-- Access to the Claude model and to Titan Text Embeddings V2 in Amazon
-  Bedrock, in the region you deploy to.
+- Access to the model you want to use and to Titan Text Embeddings V2 in
+  Amazon Bedrock, in the region you deploy to.
 
 Steps:
 
@@ -145,20 +145,31 @@ python scripts/load_docs.py path/to/your/folder
 Bedrock Knowledge Bases can read text, Markdown, HTML, PDF, Word and other
 common formats.
 
-### Use a different model
+### Choose a model
 
-The model is set in one place. Pass any Bedrock model id or inference profile
-id at deploy time:
+The default model is Claude Haiku 4.5. You can use any text model on Amazon
+Bedrock instead, from Anthropic, Amazon, Meta, Mistral or another provider.
+Pass its model id or inference profile id when you deploy:
 
 ```bash
-cdk deploy -c model_id=<model or inference profile id>
+cdk deploy -c model_id=amazon.nova-lite-v1:0
 ```
 
-List the profiles available in your region with:
+List the model ids and inference profile ids in your region:
+
+```bash
+aws bedrock list-foundation-models --by-output-modality TEXT --query "modelSummaries[].modelId"
+```
 
 ```bash
 aws bedrock list-inference-profiles --query "inferenceProfileSummaries[].inferenceProfileId"
 ```
+
+Two things to check for the model you pick:
+
+- Your account has access to it in the region you deploy to.
+- It supports tool use with the Bedrock Converse API. The agent searches the
+  documents through a tool.
 
 ## API
 

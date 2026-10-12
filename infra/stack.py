@@ -163,7 +163,7 @@ class KnowledgeBaseAgentStack(cdk.Stack):
                     "bedrock:InvokeModelWithResponseStream",
                 ],
                 resources=[
-                    "arn:aws:bedrock:*::foundation-model/anthropic.*",
+                    "arn:aws:bedrock:*::foundation-model/*",
                     f"arn:aws:bedrock:*:{self.account}:inference-profile/*",
                 ],
             )
